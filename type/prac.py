@@ -1,5 +1,5 @@
 class Chain:
-    def print_chain(self, display: str):
+    def print_chain(self, display: str) -> "Chain":
         print(display, end="")
         return self
 
