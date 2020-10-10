@@ -8,6 +8,7 @@ authors = ["moisutsu <moisutsu@gmail.com>"]
 python = "^3.8"
 sympy = "^1.6.2"
 numpy = "^1.19.2"
+knockknock = "^0.1.8"
 
 [tool.poetry.dev-dependencies]
 jupyterlab = "^2.2.6"
