@@ -45,12 +45,12 @@ class Notifier():
             "function_name": function_name,
         }
         self.start_time = datetime.now()
-        text = "training start ✌️\n" + "\n".join([f"{key}:\t{value}" for key, value in list(names.items()) + list(info.items())])
+        text = "function start ✌️\n" + "\n".join([f"{key}:\t{value}" for key, value in list(names.items()) + list(info.items())])
         self._post_with_thread(text)
 
     def _end_function(self):
         elapsed_time = datetime.now() - self.start_time
-        text = f"training end :ring:\nTraining duration: {elapsed_time}"
+        text = f"function end :ring:\nTraining duration: {elapsed_time}"
         self._post_with_thread(text)
 
     def send_message(self, text: str):
