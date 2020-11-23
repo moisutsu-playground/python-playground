@@ -69,20 +69,22 @@ class _Notifier:
         text = f"function start ✌️\n\n{send_message}"
         self._post(text)
 
-    def _end_function(self, send_message: str):
+    def _end_function(self, send_message: str, notify: bool):
         elapsed_time = datetime.now() - self.start_time
         text = f"function end :ring:\nTraining duration: {elapsed_time}\n{send_message}"
         self._post(text)
-        self._post(text, to_thread=False)
+        if notify:
+            self._post(text, to_thread=False)
 
     def send_message(self, text: str, to_thread=True):
         self._post(text, to_thread=to_thread)
 
-    def _error(self, traceback_message: str, send_message: str):
+    def _error(self, traceback_message: str, send_message: str, notify: bool):
         elapsed_time = datetime.now() - self.start_time
         text = f"Error! ☠️\nCrashed training duration: {elapsed_time}\n{send_message}\nDetail\n{traceback_message}"
         self._post(text)
-        self._post(text, to_thread=False)
+        if notify:
+            self._post(text, to_thread=False)
 
     @staticmethod
     def _dict2str(info: dict) -> str:
@@ -92,7 +94,7 @@ class _Notifier:
     def _list2str(info: list) -> str:
         return ", ".join([str(elem) for elem in info])
 
-    def decorator(self, start_message=""):
+    def decorator(self, start_message="", notify_stop=False):
         def inner_decorator(function):
             function_name = function.__name__
             info = {
@@ -108,12 +110,12 @@ class _Notifier:
                 try:
                     end_message = function(*args, **kargs)
                 except Exception as e:
-                    self._error(traceback.format_exc(), send_message)
+                    self._error(traceback.format_exc(), send_message, notify_stop)
                     raise e
                 if end_message is None:
-                    self._end_function(send_message)
+                    self._end_function(send_message, notify_stop)
                 else:
-                    self._end_function(f"{end_message}\n{send_message}")
+                    self._end_function(f"{end_message}\n{send_message}", notify_stop)
 
             return wrapper_function
 

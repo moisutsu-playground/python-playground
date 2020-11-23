@@ -10,7 +10,7 @@ def sleep_print(a, b, c, d):
     return "Finish"
 
 
-@SLACK_NOTIFIER.decorator("start message")
+@SLACK_NOTIFIER.decorator("start message", notify_stop=True)
 def use_all_method(a, b):
     SLACK_NOTIFIER.send_message("to thread")
     SLACK_NOTIFIER.send_message("send message", to_thread=False)
