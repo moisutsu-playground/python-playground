@@ -1,0 +1,2 @@
+pytorch -c pytorch
+transformers -c huggingface
