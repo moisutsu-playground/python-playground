@@ -1,28 +1,15 @@
-from time import time
+import timeit
 
 import torch
 
+gpu_device = "mps"
+dtype = torch.float
+number = 10
+size = 8192
+cpumat = torch.randn(size,size,dtype=dtype)
+gpumat = cpumat.to(gpu_device)
 
-def main():
-    device = torch.device("mps")
-
-    print(device)
-
-    x1 = torch.randn(500, 500).to(device)
-    x2 = torch.randn(500, 500).to(device)
-
-    start = time()
-    for _ in range(5000):
-        x1 @ x2
-    print(f"On GPU: {time() - start:.2f}")
-
-    y1 = torch.randn(500, 500)
-    y2 = torch.randn(500, 500)
-
-    start = time()
-    for _ in range(5000):
-        y1 @ y2
-    print(f"On CPU: {time() - start:.2f}")
-
-if __name__ == "__main__":
-    main()
+cpu_time = timeit.timeit("torch.matmul(cpumat,cpumat)",number=number,globals=globals())
+print("cpu_time: {:.6f} seconds".format(cpu_time))
+gpu_time = timeit.timeit("torch.matmul(gpumat,gpumat)",number=number,globals=globals())
+print("gpu_time: {: .6f} seconds".format(gpu_time))
