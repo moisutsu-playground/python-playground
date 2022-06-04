@@ -1,30 +1,26 @@
 from time import time
 
 import torch
+from transformers import BertModel, BertTokenizer
 
+pretrained_name = "bert-base-uncased"
 
-def main():
-    device = torch.device("mps")
+bert = BertModel.from_pretrained(pretrained_name)
+tokenizer = BertTokenizer.from_pretrained(pretrained_name)
 
-    print(device)
+device = torch.device("mps")
 
-    size = 8192
+s = "Natural language processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence concerned with the interactions between computers and human language, in particular how to program computers to process and analyze large amounts of natural language data. The goal is a computer capable of 'understanding' the contents of documents, including the contextual nuances of the language within them. The technology can then accurately extract information and insights contained in the documents as well as categorize and organize the documents themselves.Natural language processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence concerned with the interactions between computers and human language, in particular how to program computers to process and analyze large amounts of natural language data. The goal is a computer capable of 'understanding' the contents of documents, including the contextual nuances of the language within them. The technology can then accurately extract information and insights contained in the documents as well as categorize and organize the documents themselves.Natural language processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence concerned with the interactions between computers and human language, in particular how to program computers to process and analyze large amounts of natural language data. The goal is a computer capable of 'understanding' the contents of documents, including the contextual nuances of the language within them. The technology can then accurately extract information and insights contained in the documents as well as categorize and organize the documents themselves.Natural language processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence concerned with the interactions between computers and human language, in particular how to program computers to process and analyze large amounts of natural language data. The goal is a computer capable of 'understanding' the contents of documents, including the contextual nuances of the language within them. The technology can then accurately extract information and insights contained in the documents as well as categorize and organize the documents themselves.Natural language processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence concerned with the interactions between computers and human language, in particular how to program computers to process and analyze large amounts of natural language data. The goal is a computer capable of 'understanding' the contents of documents, including the contextual nuances of the language within them. The technology can then accurately extract information and insights contained in the documents as well as categorize and organize the documents themselves."
 
-    x1 = torch.randn(size, size).to(device)
-    x2 = torch.randn(size, size).to(device)
+batch = tokenizer(s, return_tensors="pt")
 
-    start = time()
-    for _ in range(10):
-        x1 @ x2
-    print(f"On GPU: {time() - start:.2f}")
+st = time()
+out = bert(**batch)
+print(f"On CPU: {time() - st:.2f}")
 
-    y1 = torch.randn(size, size)
-    y2 = torch.randn(size, size)
+bert = bert.to(device)
+batch = tokenizer(s, return_tensors="pt").to(device)
 
-    start = time()
-    for _ in range(10):
-        y1 @ y2
-    print(f"On CPU: {time() - start:.2f}")
-
-if __name__ == "__main__":
-    main()
+st = time()
+out = bert(**batch)
+print(f"On GPU: {time() - st:.2f}")
